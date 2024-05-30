@@ -1,30 +1,51 @@
 namespace MauiAppJeffersonR.Views;
-
+[QueryProperty(nameof(ItemId), nameof(ItemId))]
 public partial class NewPageJeffersonRuiz : ContentPage
 {
-	
-    string _fileName = Path.Combine(FileSystem.AppDataDirectory, "notes.txt");
 
+    string _fileName = Path.Combine(FileSystem.AppDataDirectory, "notes.txt");
     public NewPageJeffersonRuiz()
     {
         InitializeComponent();
+        string appDataPath = FileSystem.AppDataDirectory;
+        string randomFileName = $"{Path.GetRandomFileName()}.notes.txt";
 
-        if (File.Exists(_fileName))
-            TextEditor.Text = File.ReadAllText(_fileName);
+        LoadNote(Path.Combine(appDataPath, randomFileName));
+    }
+    private async void SaveButton_Clicked(object sender, EventArgs e)
+    {
+        if (BindingContext is Models.JeffersonRuizNote note)
+            File.WriteAllText(note.Filename, TextEditor.Text);
+
+        await Shell.Current.GoToAsync("..");
     }
 
-    private void SaveButton_Clicked(object sender, EventArgs e)
+    private async void DeleteButton_Clicked(object sender, EventArgs e)
     {
-        // Save the file.
-        File.WriteAllText(_fileName, TextEditor.Text);
+        if (BindingContext is Models.JeffersonRuizNote note)
+        {
+            // Delete the file.
+            if (File.Exists(note.Filename))
+                File.Delete(note.Filename);
+        }
+
+        await Shell.Current.GoToAsync("..");
     }
-
-    private void DeleteButton_Clicked(object sender, EventArgs e)
+    private void LoadNote(string fileName)
     {
-        // Delete the file.
-        if (File.Exists(_fileName))
-            File.Delete(_fileName);
+        Models.JeffersonRuizNote noteModel = new Models.JeffersonRuizNote();
+        noteModel.Filename = fileName;
 
-        TextEditor.Text = string.Empty;
+        if (File.Exists(fileName))
+        {
+            noteModel.Date = File.GetCreationTime(fileName);
+            noteModel.Text = File.ReadAllText(fileName);
+        }
+
+        BindingContext = noteModel;
+    }
+    public string ItemId
+    {
+        set { LoadNote(value); }
     }
 }

@@ -73,6 +73,9 @@
 	  <MauiXaml Update="Views\AboutPageJeffersonRuiz.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\AllNoteJeffersonRuiz.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\NewPageJeffersonRuiz.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
